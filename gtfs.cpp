@@ -1,6 +1,8 @@
 #include "gtfs.hpp"
 
-#define VERBOSE_PRINT(verbose, str...) (verbose ? cout << "VERBOSE: "<< __FILE__ << ":" << __LINE__ << ":" << __func__ << "():" << str : "0")
+#define VERBOSE_PRINT(verbose, str...) do { \
+	if (verbose) cout << "VERBOSE: "<< __FILE__ << ":" << __LINE__ << ":" << __func__ << "():" << str; \
+	} while(0)
 
 int do_verbose;
 
