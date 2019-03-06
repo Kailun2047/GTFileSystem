@@ -18,7 +18,12 @@ gtfs_t* gtfs_init(string directory, int verbose_flag) {
 
 int gtfs_clean(gtfs_t *gtfs) {
 	int ret = -1;
-	VERBOSE_PRINT(do_verbose, "Cleaning up GTFileSystem inside directory " << gtfs->dirname << "\n");
+	if (gtfs) { 
+		VERBOSE_PRINT(do_verbose, "Cleaning up GTFileSystem inside directory " << gtfs->dirname << "\n");
+	} else {
+		VERBOSE_PRINT(do_verbose, "GTFileSystem is not existed\n");
+		return ret;
+	}
 	//TODO: Any additional initializations and checks
 	
 	VERBOSE_PRINT(do_verbose, "Success.\n"); //On success returns 0.
@@ -27,7 +32,12 @@ int gtfs_clean(gtfs_t *gtfs) {
 
 file_t* gtfs_open_file(gtfs_t* gtfs, string filename, int file_length) {
 	file_t *fl = NULL;
-	VERBOSE_PRINT(do_verbose, "Opening file " << filename << " inside directory " << gtfs->dirname << "\n");
+	if (gtfs) {
+		VERBOSE_PRINT(do_verbose, "Opening file " << filename << " inside directory " << gtfs->dirname << "\n");
+	} else {
+		VERBOSE_PRINT(do_verbose, "GTFileSystem is not existed\n");
+		return NULL;
+	}
 	//TODO: Any additional initializations and checks
 	
 	VERBOSE_PRINT(do_verbose, "Success.\n"); //On success returns non NULL.
@@ -36,7 +46,12 @@ file_t* gtfs_open_file(gtfs_t* gtfs, string filename, int file_length) {
 
 int gtfs_close_file(gtfs_t* gtfs, file_t* fl) {
 	int ret = -1;
-	VERBOSE_PRINT(do_verbose, "Closing file " << fl->filename << " inside directory " << gtfs->dirname << "\n");
+	if (gtfs and fl) {
+		VERBOSE_PRINT(do_verbose, "Closing file " << fl->filename << " inside directory " << gtfs->dirname << "\n");
+	} else {
+		VERBOSE_PRINT(do_verbose, "GTFileSystem or file is not existed\n");
+		return ret;
+	}
 	//TODO: Any additional initializations and checks
 	
 	VERBOSE_PRINT(do_verbose, "Success.\n"); //On success returns 0.
@@ -45,7 +60,12 @@ int gtfs_close_file(gtfs_t* gtfs, file_t* fl) {
 
 int gtfs_remove_file(gtfs_t* gtfs, file_t* fl) {
 	int ret = -1;
-	VERBOSE_PRINT(do_verbose, "Removing file " << fl->filename << " inside directory " << gtfs->dirname << "\n");
+	if (gtfs and fl) {
+	    VERBOSE_PRINT(do_verbose, "Removing file " << fl->filename << " inside directory " << gtfs->dirname << "\n");
+	} else {
+	    VERBOSE_PRINT(do_verbose, "GTFileSystem or file is not existed\n");
+	    return ret;
+	}
 	//TODO: Any additional initializations and checks
 	
 	VERBOSE_PRINT(do_verbose, "Success.\n"); //On success returns 0.
@@ -55,7 +75,12 @@ int gtfs_remove_file(gtfs_t* gtfs, file_t* fl) {
 
 char* gtfs_read_file(gtfs_t* gtfs, file_t* fl, int offset, int length) {
 	char* ret_data = NULL;
-	VERBOSE_PRINT(do_verbose, "Reading " << length << " bytes starting from offset " << offset << " inside file " << fl->filename << "\n");
+	if (gtfs and fl) {
+		VERBOSE_PRINT(do_verbose, "Reading " << length << " bytes starting from offset " << offset << " inside file " << fl->filename << "\n");
+	} else {
+		VERBOSE_PRINT(do_verbose, "GTFileSystem or file is not existed\n");
+		return NULL;
+	}
 	//TODO: Any additional initializations and checks
 	
 	VERBOSE_PRINT(do_verbose, "Success.\n"); //On success returns pointer to data read.
@@ -64,7 +89,12 @@ char* gtfs_read_file(gtfs_t* gtfs, file_t* fl, int offset, int length) {
 
 write_t* gtfs_write_file(gtfs_t* gtfs, file_t* fl, int offset, int length, const char* data) {
 	write_t *write_id = NULL;
-	VERBOSE_PRINT(do_verbose, "Writting " << length << " bytes starting from offset " << offset << " inside file " << fl->filename << "\n");
+	if (gtfs and fl) {
+		VERBOSE_PRINT(do_verbose, "Writting " << length << " bytes starting from offset " << offset << " inside file " << fl->filename << "\n");
+	} else {
+		VERBOSE_PRINT(do_verbose, "GTFileSystem or file is not existed\n");
+		return NULL;
+	}
 	//TODO: Any additional initializations and checks
 	
 	VERBOSE_PRINT(do_verbose, "Success.\n"); //On success returns non NULL.
@@ -73,7 +103,12 @@ write_t* gtfs_write_file(gtfs_t* gtfs, file_t* fl, int offset, int length, const
 
 int gtfs_sync_write_file(write_t* write_id) {
 	int ret = -1;
-	VERBOSE_PRINT(do_verbose, "Persisting write of " << write_id->length << " bytes starting from offset " << write_id->offset << " inside file " << write_id->filename << "\n");
+	if (write_id) {
+		VERBOSE_PRINT(do_verbose, "Persisting write of " << write_id->length << " bytes starting from offset " << write_id->offset << " inside file " << write_id->filename << "\n");
+	} else {
+		VERBOSE_PRINT(do_verbose, "Write operation is not exist\n");
+		return ret;
+	}
 	//TODO: Any additional initializations and checks
 	
 	VERBOSE_PRINT(do_verbose, "Success.\n"); //On success returns number of bytes written.
@@ -82,7 +117,12 @@ int gtfs_sync_write_file(write_t* write_id) {
 
 int gtfs_abort_write_file(write_t* write_id) {
 	int ret = -1;
-	VERBOSE_PRINT(do_verbose, "Aborting write of " << write_id->length << " bytes starting from offset " << write_id->offset << " inside file " << write_id->filename << "\n");
+	if (write_id) {
+		VERBOSE_PRINT(do_verbose, "Aborting write of " << write_id->length << " bytes starting from offset " << write_id->offset << " inside file " << write_id->filename << "\n");
+	} else {
+		VERBOSE_PRINT(do_verbose, "Write operation is not exist\n");
+		return ret;
+	}
 	//TODO: Any additional initializations and checks
 	
 	VERBOSE_PRINT(do_verbose, "Success.\n"); //On success returns 0.
