@@ -7,6 +7,18 @@
 #include <iostream>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <vector>
+#include <unistd.h>
+#include <unordered_map>
+#include <pthread.h> // to use pthread mutex
+#include <sys/ipc.h>
+#include <sys/sem.h> // to use semaphore
+#include <sys/shm.h> // to use shared memory
+#include <string.h> // strcpy, strcmp
 
 using namespace std;
 
@@ -23,12 +35,17 @@ extern int do_verbose;
 typedef struct gtfs {
     string dirname;
     // TODO: Add any additional fields if necessary
+    int shm_id; // use shared memory to store the current tail position of log file
+    int sem_id; // use semaphore to synchronize write to log file
+    int log_fd; // file descriptor for the log file
 } gtfs_t;
 
 typedef struct file {
     string filename;
 	int file_length;
     // TODO: Add any additional fields if necessary
+    int fd; // file descriptor
+    char* data; // in-memory version of data
 } file_t;
 
 typedef struct write {
@@ -37,6 +54,11 @@ typedef struct write {
 	int length;
 	char *data;
     // TODO: Add any additional fields if necessary
+    char* old_data; // undo record
+    int shm_id;
+    int sem_id;
+    int log_fd;
+    file_t* file; // to manipulate in-memory version of data
 } write_t;
 
 // GTFileSystem basic API calls
