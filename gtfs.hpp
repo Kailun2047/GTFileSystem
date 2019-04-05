@@ -13,12 +13,13 @@
 #include <sys/mman.h>
 #include <vector>
 #include <unistd.h>
-#include <unordered_map>
+#include <unordered_map> // used in gtfs_clean() to cache file descriptors
 #include <pthread.h> // to use pthread mutex
 #include <sys/ipc.h>
 #include <sys/sem.h> // to use semaphore
 #include <sys/shm.h> // to use shared memory
 #include <string.h> // strcpy, strcmp
+#include <sstream> // to concatenate multiple strings
 
 using namespace std;
 
@@ -29,6 +30,7 @@ using namespace std;
 
 #define MAX_FILENAME_LEN 255
 #define MAX_NUM_FILES_PER_DIR 1024
+#define MAX_LOG_SIZE 1024
 
 extern int do_verbose;
 
