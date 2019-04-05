@@ -9,7 +9,7 @@ void writer() {
 	gtfs_t *gtfs = gtfs_init(directory, verbose);
 	string filename = "test1.txt";
 	file_t *fl = gtfs_open_file(gtfs, filename, 100);
-	
+
 	string str = "Hi, I'm the writer.\n"; 
 	write_t *wrt = gtfs_write_file(gtfs, fl, 10, str.length(), str.c_str());
 	gtfs_sync_write_file(wrt);
@@ -52,7 +52,7 @@ void test_write_read() {
 void test_abort_write() {
 	
 	gtfs_t *gtfs = gtfs_init(directory, verbose);
-	string filename = "test1.txt";
+	string filename = "test2.txt";
 	file_t *fl = gtfs_open_file(gtfs, filename, 100);
 	
 	string str = "Testing string.\n"; 
@@ -68,9 +68,13 @@ void test_abort_write() {
 		if (str.compare(string(data1)) != 0) {
 			cout << FAIL;
 		}
-		// Second write was aborted so there should be no data returned
+		// Second write was aborted and there was no string written in that offset
 		char *data2 = gtfs_read_file(gtfs, fl, 20, str.length());
-		(data2 == NULL) ? cout << PASS : cout << FAIL;
+		if (data2 == NULL) {
+			cout << FAIL;
+		} else if (string(data2).compare("") == 0) {
+			cout << PASS;
+		}
 	} else {
 		cout << FAIL;
 	}	
@@ -107,6 +111,27 @@ void test_truncate_log() {
 }
 
 // TODO: Implement any additional tests
+void test_remove_file() {
+	gtfs_t *gtfs = gtfs_init(directory, verbose);
+	string filename = "test3.txt";
+	file_t *fl1 = gtfs_open_file(gtfs, filename, 100);
+	string str1 = "Testing string 1.\n";
+	write_t *wrt1 = gtfs_write_file(gtfs, fl1, 0, str1.length(), str1.c_str());
+	gtfs_sync_write_file(wrt1);
+
+	gtfs_close_file(gtfs, fl1);
+	gtfs_remove_file(gtfs, fl1);
+
+	file_t *fl2 = gtfs_open_file(gtfs, filename, 100);
+	string str2 = "Tesing string 2.\n";
+	write_t *wrt2 = gtfs_write_file(gtfs, fl2, 0, str2.length(), str2.c_str());
+	gtfs_sync_write_file(wrt2);
+	char* data2 = gtfs_read_file(gtfs, fl2, 0, str2.length());
+	if (str2.compare(string(data2)) == 0) cout << PASS;
+	else cout << FAIL;
+
+	gtfs_close_file(gtfs, fl2);
+}
 
 int main(int argc, char **argv) {
     if (argc < 2)
@@ -136,5 +161,7 @@ int main(int argc, char **argv) {
 	test_truncate_log();
 	
 	// TODO: Call any additional tests
-	
+	cout << "================== Test 4 ==================\n";
+	cout << "Testing that logs of deleted file are invalidated.\n";
+	test_remove_file();
 }
