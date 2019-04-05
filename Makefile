@@ -1,4 +1,4 @@
-CFLAGS  =
+CFLAGS  = -std=c++11
 LFLAGS  =
 CC      = g++
 RM      = /bin/rm -rf
